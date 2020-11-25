@@ -1,0 +1,132 @@
+version: "3"
+ 
+services:
+    Maestro1:
+        image: elasticsearch:7.9.3
+        container_name: Maestro1
+        environment: 
+            - cluster.name=Cluster
+            - node.name=Maestro1
+            - cluster.initial_master_nodes=Maestro1,Maestro2
+            - node.master=true
+            - node.voting_only=false
+            - node.data=false
+            - node.ingest=false
+            - cluster.routing.allocation.disk.threshold_enabled=false
+            - ES_JAVA_OPTS=-Xms250m -Xmx250m
+            
+    Maestro2:
+        image: elasticsearch:7.9.3
+        container_name: Maestro2
+        environment: 
+            - cluster.name=Cluster
+            - node.name=Maestro2
+            - cluster.initial_master_nodes=Maestro1,Maestro2
+            - node.master=true
+            - node.voting_only=false
+            - node.data=false
+            - node.ingest=false
+            - cluster.routing.allocation.disk.threshold_enabled=false
+            - ES_JAVA_OPTS=-Xms250m -Xmx250m
+
+    Datos1:
+        image: elasticsearch:7.9.3
+        container_name: Datos1
+        environment: 
+            - cluster.name=Cluster
+            - node.name=Datos1
+            - cluster.initial_master_nodes=Maestro1,Maestro2
+            - node.master=true
+            - node.voting_only=true
+            - node.data=true
+            - node.ingest=false
+            - ES_JAVA_OPTS=-Xms250m -Xmx250m            
+            
+    Datos2:
+        image: elasticsearch:7.9.3
+        container_name: Datos2
+        environment: 
+            - cluster.name=Cluster
+            - node.name=Datos2
+            - discovery.seed_hosts=Maestro1,Maestro2
+            - node.master=false
+            - node.data=true
+            - node.ingest=false
+            - ES_JAVA_OPTS=-Xms250m -Xmx250m            
+            
+    Datos3:
+        image: elasticsearch:7.9.3
+        container_name: Datos3
+        environment: 
+            - cluster.name=Cluster
+            - node.name=Datos3
+            - discovery.seed_hosts=Maestro1,Maestro2
+            - node.master=false
+            - node.data=true
+            - node.ingest=false
+            - ES_JAVA_OPTS=-Xms250m -Xmx250m            
+            
+    Ingesta1:
+        image: elasticsearch:7.9.3
+        container_name: Ingesta1
+        environment: 
+            - cluster.name=Cluster
+            - node.name=Ingesta1
+            - discovery.seed_hosts=Maestro1,Maestro2
+            - node.master=false
+            - node.data=false
+            - node.ingest=true
+            - ES_JAVA_OPTS=-Xms250m -Xmx250m            
+            
+    Ingesta2:
+        image: elasticsearch:7.9.3
+        container_name: Ingesta2
+        environment: 
+            - cluster.name=Cluster
+            - node.name=Ingesta2
+            - discovery.seed_hosts=Maestro1,Maestro2
+            - node.master=false
+            - node.data=false
+            - node.ingest=true
+            - ES_JAVA_OPTS=-Xms250m -Xmx250m            
+                        
+    Coordinador1:
+        image: elasticsearch:7.9.3
+        container_name: Coordinador1
+        ports:
+            - 8080:9200
+        environment: 
+            - cluster.name=Cluster
+            - node.name=Coordinador1
+            - discovery.seed_hosts=Maestro1,Maestro2
+            - node.master=false
+            - node.data=false
+            - node.ingest=false
+            - ES_JAVA_OPTS=-Xms250m -Xmx250m            
+                    
+    Coordinador2:
+        image: elasticsearch:7.9.3
+        container_name: Coordinador2
+        environment: 
+            - cluster.name=Cluster
+            - node.name=Coordinador2
+            - discovery.seed_hosts=Maestro1,Maestro2
+            - node.master=false
+            - node.data=false
+            - node.ingest=false
+            - ES_JAVA_OPTS=-Xms250m -Xmx250m            
+
+    Kibana:
+        image: kibana:7.9.3
+        container_name: Kibana
+        ports:
+            - 8081:5601 
+        environment: 
+            - ELASTICSEARCH_HOSTS=http://Coordinador1:9200
+
+    Cerebro:
+        image: lmenezes/cerebro:0.8.5
+        container_name: Cerebro
+        ports:
+            - 8082:9000 
+                                      
