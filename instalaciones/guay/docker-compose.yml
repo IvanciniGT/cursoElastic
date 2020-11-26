@@ -7,13 +7,15 @@ services:
         environment: 
             - cluster.name=Cluster
             - node.name=Maestro1
-            - cluster.initial_master_nodes=Maestro1,Maestro2
+            - cluster.initial_master_nodes=Maestro1,Maestro2,Datos1
             - node.master=true
             - node.voting_only=false
             - node.data=false
             - node.ingest=false
             - cluster.routing.allocation.disk.threshold_enabled=false
             - ES_JAVA_OPTS=-Xms250m -Xmx250m
+        volumes:
+            - /home/ubuntu/environment/datos/nodo1:/usr/share/elasticsearch/data
             
     Maestro2:
         image: elasticsearch:7.9.3
@@ -21,13 +23,15 @@ services:
         environment: 
             - cluster.name=Cluster
             - node.name=Maestro2
-            - cluster.initial_master_nodes=Maestro1,Maestro2
+            - cluster.initial_master_nodes=Maestro1,Maestro2,Datos1
             - node.master=true
             - node.voting_only=false
             - node.data=false
             - node.ingest=false
             - cluster.routing.allocation.disk.threshold_enabled=false
             - ES_JAVA_OPTS=-Xms250m -Xmx250m
+        volumes:
+            - /home/ubuntu/environment/datos/nodo2:/usr/share/elasticsearch/data
 
     Datos1:
         image: elasticsearch:7.9.3
@@ -35,12 +39,14 @@ services:
         environment: 
             - cluster.name=Cluster
             - node.name=Datos1
-            - cluster.initial_master_nodes=Maestro1,Maestro2
+            - discovery.seed_hosts=Maestro1,Maestro2
             - node.master=true
             - node.voting_only=true
             - node.data=true
             - node.ingest=false
             - ES_JAVA_OPTS=-Xms250m -Xmx250m            
+        volumes:
+            - /home/ubuntu/environment/datos/nodo3:/usr/share/elasticsearch/data
             
     Datos2:
         image: elasticsearch:7.9.3
@@ -53,6 +59,8 @@ services:
             - node.data=true
             - node.ingest=false
             - ES_JAVA_OPTS=-Xms250m -Xmx250m            
+        volumes:
+            - /home/ubuntu/environment/datos/nodo4:/usr/share/elasticsearch/data
             
     Datos3:
         image: elasticsearch:7.9.3
@@ -65,6 +73,22 @@ services:
             - node.data=true
             - node.ingest=false
             - ES_JAVA_OPTS=-Xms250m -Xmx250m            
+        volumes:
+            - /home/ubuntu/environment/datos/nodo5:/usr/share/elasticsearch/data
+           
+    Datos4:
+        image: elasticsearch:7.9.3
+        container_name: Datos4
+        environment: 
+            - cluster.name=Cluster
+            - node.name=Datos4
+            - discovery.seed_hosts=Maestro1,Maestro2
+            - node.master=false
+            - node.data=true
+            - node.ingest=false
+            - ES_JAVA_OPTS=-Xms250m -Xmx250m            
+        volumes:
+            - /home/ubuntu/environment/datos/nodo6:/usr/share/elasticsearch/data
             
     Ingesta1:
         image: elasticsearch:7.9.3
@@ -77,6 +101,8 @@ services:
             - node.data=false
             - node.ingest=true
             - ES_JAVA_OPTS=-Xms250m -Xmx250m            
+        volumes:
+            - /home/ubuntu/environment/datos/nodo7:/usr/share/elasticsearch/data
             
     Ingesta2:
         image: elasticsearch:7.9.3
@@ -89,6 +115,8 @@ services:
             - node.data=false
             - node.ingest=true
             - ES_JAVA_OPTS=-Xms250m -Xmx250m            
+        volumes:
+            - /home/ubuntu/environment/datos/nodo8:/usr/share/elasticsearch/data
                         
     Coordinador1:
         image: elasticsearch:7.9.3
@@ -103,6 +131,8 @@ services:
             - node.data=false
             - node.ingest=false
             - ES_JAVA_OPTS=-Xms250m -Xmx250m            
+        volumes:
+            - /home/ubuntu/environment/datos/nodo9:/usr/share/elasticsearch/data
                     
     Coordinador2:
         image: elasticsearch:7.9.3
@@ -115,6 +145,8 @@ services:
             - node.data=false
             - node.ingest=false
             - ES_JAVA_OPTS=-Xms250m -Xmx250m            
+        volumes:
+            - /home/ubuntu/environment/datos/nodo10:/usr/share/elasticsearch/data
 
     Kibana:
         image: kibana:7.9.3
