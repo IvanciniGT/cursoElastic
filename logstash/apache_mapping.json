@@ -1,5 +1,6 @@
 {
     "index_patterns": ["apache-*"],
+    "settings":{},
     "mappings": {
        "properties": {
         "bytes" : {"type" : "integer"},

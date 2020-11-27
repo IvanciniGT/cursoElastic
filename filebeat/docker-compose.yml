@@ -1,9 +1,17 @@
 version: "3"
 
 services:
+
     filebeat:
         image: docker.elastic.co/beats/filebeat:7.9.3
         container_name: mifilebeat
         volumes:
             - /home/ubuntu/environment/curso/filebeat/apache.log:/tmp/apache.log
             - /home/ubuntu/environment/curso/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+
+    milogstash:
+        image: logstash:7.9.3
+        container_name: milogstash
+        volumes:
+            - /home/ubuntu/environment/curso/logstash/apache-pipeline.conf:/usr/share/logstash/pipeline/apache-pipeline.conf
+            - /home/ubuntu/environment/curso/logstash/apache_mapping.json:/tmp/apache_mapping.json

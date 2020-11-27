@@ -2,5 +2,6 @@ filebeat.inputs:
 - type: log
   paths:
     - /tmp/apache.log 
+
 output.logstash:
-  hosts: ["localhost:5044"]
+  hosts: ["milogstash:5045"]
